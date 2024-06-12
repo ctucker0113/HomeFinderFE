@@ -18,7 +18,7 @@ const getAllRooms = () => new Promise((resolve, reject) => {
 
 // Get Single Room
 const getSingleRoom = (id) => new Promise((resolve, reject) => {
-  fetch(`${endpoint}/api/getSingleRoom/${id}.json`, {
+  fetch(`${endpoint}/api/getSingleRoom/${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
