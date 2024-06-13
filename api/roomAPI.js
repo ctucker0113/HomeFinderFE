@@ -16,7 +16,7 @@ const getAllRooms = () => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-// Get Single Room
+// Get Single Room by ID
 const getSingleRoom = (id) => new Promise((resolve, reject) => {
   fetch(`${endpoint}/api/getSingleRoom/${id}`, {
     method: 'GET',
@@ -70,10 +70,24 @@ const updateRoom = (payload) => new Promise((resolve, reject) => {
       .catch(reject);
   });
 
+  // Get a Single Room By Name
+const getSingleRoomByName = (name) => new Promise((resolve, reject) => {
+  fetch(`${endpoint}/api/getSingleRoomByName/${name}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => resolve((data)))
+    .catch(reject);
+});
+
 export {
   getAllRooms,
   getSingleRoom,
   deleteRoom,
   updateRoom,
-  createRoom
+  createRoom,
+  getSingleRoomByName,
 }
