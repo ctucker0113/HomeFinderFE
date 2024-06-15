@@ -16,6 +16,27 @@ const getAllItems = () => new Promise((resolve, reject) => {
       .catch(reject);
   });
 
+  const getAllItemsInARoom = (roomID) => new Promise((resolve, reject) => {
+    fetch(`${endpoint}/api/getAllItemsByRoom/${roomID}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // This code is needed to prevent a strange bug from occurring on View All Room Details.
+        // It treats a string response from back end("No items found") differently from an array response.
+        // Without this code, the program treats the string as an array, and creates a blank item card for each character in the string.
+        if (typeof data === 'string') {
+          resolve(data); // Resolve the string message directly
+        } else {
+          resolve(Object.values(data)); // Resolve as an array of items
+        }
+      })
+      .catch(reject);
+  });
+
 // Get Single Item
 const getSingleItem = (id) => new Promise((resolve, reject) => {
   fetch(`${endpoint}/api/getSingleItem/${id}`, {
@@ -72,6 +93,7 @@ const deleteItem = (id) => new Promise((resolve, reject) => {
 
 export {
     getAllItems,
+    getAllItemsInARoom,
     getSingleItem,
     createItem,
     updateItem,
