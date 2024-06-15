@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { getAllItems } from '../api/itemAPI';
+import SearchBar from '../components/SearchBar';
 import ItemCard from '../components/ItemCard';
 
 export default function ViewItems() {
   const [items, setItems] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]);
   const getAllUserItems = () => {
     getAllItems().then(setItems);
   };
@@ -12,11 +14,21 @@ export default function ViewItems() {
     getAllUserItems();
   }, []);
 
+  const handleSearch = (searchValue) => {
+    const filteredSearch = items.filter((item) => (
+      item.name.toLowerCase().includes(searchValue.toLowerCase())
+    ));
+    setFilteredItems(filteredSearch);
+  };
+
   return (
     <>
       <h1>Items</h1>
+      <div>
+        <SearchBar handleSearch={handleSearch} />
+      </div>
       <div className="d-flex flex-wrap">
-        {items.map((item) => (
+        {filteredItems.map((item) => (
           <ItemCard key={item.id} itemObj={item} onUpdate={getAllItems} />
         ))}
       </div>
