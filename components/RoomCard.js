@@ -8,7 +8,6 @@ function RoomCard({ roomObj, onUpdate }) {
   const deleteThisRoom = () => {
     if (window.confirm(`Are you 1000% positive you want to delete ${roomObj.name}? This action cannot be undone.`)) {
       deleteRoom(roomObj.id).then(() => {
-        console.log('Room deleted, calling onUpdate...');
         onUpdate();
       });
     }

@@ -35,7 +35,7 @@ export default function ViewAllItemsInARoom() {
     if (id) {
       viewAllRoomItems();
     }
-  }, [id]);
+  }, [viewAllRoomItems, id]);
 
   return (
     <div>

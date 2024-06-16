@@ -29,7 +29,7 @@ function ItemCard({ itemObj, onUpdate }) {
       .catch((error) => {
         console.error('Error fetching tags:', error);
       });
-  }, [itemObj.roomID]);
+  }, [itemObj.id, itemObj.roomID]);
 
   // Functionality for delete confirmation pop-up
   const deleteThisItem = () => {
