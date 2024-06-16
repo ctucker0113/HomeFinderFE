@@ -5,16 +5,25 @@ const endpoint = clientCredentials.databaseURL;
 
 // Get All of the Tags Associated With a Specific Item
 const getAllTagsForSingleItem = (itemID) => new Promise((resolve, reject) => {
-  fetch(`${endpoint}/api/getAllTagsForSingleItem/${itemID}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => resolve(Object.values(data)))
-    .catch(reject);
-});
+    fetch(`${endpoint}/api/getAllTagsForSingleItem/${itemID}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+    // Treat a string response from the back end differently from an array.
+        if (typeof data === 'string' && data === 'No Tags Found For This Item.') {
+          resolve([]); // Resolve with an empty array if no tags are found
+        } else if (Array.isArray(data)) {
+          resolve(data); // Resolve with the array of tags
+        } else {
+          reject('Unexpected response format');
+        }
+      })
+      .catch(reject);
+  });
 
 // Create an ItemTag (i.e. - Add a Tag to an Item)
 // Adds a tag to an item by creating a new ItemTag entity on the joined table.

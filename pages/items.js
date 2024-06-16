@@ -6,8 +6,13 @@ import ItemCard from '../components/ItemCard';
 export default function ViewItems() {
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
+
   const getAllUserItems = () => {
-    getAllItems().then(setItems);
+    getAllItems().then((data) => {
+      setItems(data);
+      setFilteredItems(data);
+    }).catch(() => {
+    });
   };
 
   useEffect(() => {
@@ -28,9 +33,13 @@ export default function ViewItems() {
         <SearchBar handleSearch={handleSearch} />
       </div>
       <div className="d-flex flex-wrap">
-        {filteredItems.map((item) => (
-          <ItemCard key={item.id} itemObj={item} onUpdate={getAllItems} />
-        ))}
+        {filteredItems.length > 0 ? (
+          filteredItems.map((item) => (
+            <ItemCard key={item.id} itemObj={item} onUpdate={getAllUserItems} />
+          ))
+        ) : (
+          <p>No items found.</p>
+        )}
       </div>
     </>
   );

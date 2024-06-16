@@ -5,9 +5,11 @@ import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { deleteItem } from '../api/itemAPI';
 import { getSingleRoom } from '../api/roomAPI';
+import { getAllTagsForSingleItem } from '../api/itemTagAPI';
 
 function ItemCard({ itemObj, onUpdate }) {
   const [roomName, setRoomName] = useState('');
+  const [tags, setTags] = useState([]);
 
   useEffect(() => {
     // Fetch the room details and set the room name
@@ -17,6 +19,15 @@ function ItemCard({ itemObj, onUpdate }) {
       })
       .catch((error) => {
         console.error('Error fetching room:', error);
+      });
+
+    // Fetch the tags associated with the item
+    getAllTagsForSingleItem(itemObj.id)
+      .then((tagsData) => {
+        setTags(tagsData);
+      })
+      .catch((error) => {
+        console.error('Error fetching tags:', error);
       });
   }, [itemObj.roomID]);
 
@@ -34,6 +45,9 @@ function ItemCard({ itemObj, onUpdate }) {
         <Card.Title>{itemObj.name}</Card.Title>
         <Card.Text>
           Location: {roomName}
+        </Card.Text>
+        <Card.Text>
+          Tags: {tags.length > 0 ? tags.map((tag) => tag.name).join(', ') : 'No tags'}
         </Card.Text>
         <Link href={`/items/${itemObj.id}`} passHref>
           <Button variant="info">View Item Details</Button>
