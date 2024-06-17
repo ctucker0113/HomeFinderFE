@@ -49,9 +49,6 @@ function ItemCard({ itemObj, onUpdate }) {
         <Card.Text>
           Tags: {tags.length > 0 ? tags.map((tag) => tag.name).join(', ') : 'No tags'}
         </Card.Text>
-        <Link href={`/items/${itemObj.id}`} passHref>
-          <Button variant="info">View Item Details</Button>
-        </Link>
         <Link href={`/items/edit/${itemObj.id}`} passHref>
           <Button variant="info">Edit/Move Item</Button>
         </Link>

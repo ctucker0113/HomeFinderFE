@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { getAllItems } from '../api/itemAPI';
-import SearchBar from '../components/SearchBar';
-import ItemCard from '../components/ItemCard';
+import { getAllItems } from '../../api/itemAPI';
+import SearchBar from '../../components/SearchBar';
+import ItemCard from '../../components/ItemCard';
 
 export default function ViewItems() {
   const [items, setItems] = useState([]);

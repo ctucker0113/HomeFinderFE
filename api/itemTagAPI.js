@@ -51,7 +51,7 @@ const createItemTagRelationship = (itemId, tagId) => {
   };
 
 const deleteItemTagRelationship = (itemID, tagID) => new Promise((resolve, reject) => {
-  fetch(`${endpoint}/api/DeletePodcastFromPlaylist/${itemID}/${tagID}`, {
+  fetch(`${endpoint}/api/DeleteTagFromItem/${itemID}/${tagID}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'applicaton/json',
