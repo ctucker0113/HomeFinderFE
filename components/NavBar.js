@@ -1,8 +1,7 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import Link from 'next/link';
 import {
-  Navbar, //
+  Navbar,
   Container,
   Nav,
   Button,
@@ -29,6 +28,8 @@ export default function NavBar() {
             <Link passHref href="/itemsLandingPage">
               <Nav.Link>Items</Nav.Link>
             </Link>
+          </Nav>
+          <Nav className="ms-auto">
             <Button variant="danger" onClick={signOut}>
               Sign Out
             </Button>

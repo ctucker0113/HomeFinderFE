@@ -22,7 +22,7 @@ function ItemLandingPage() {
         margin: '0 auto',
       }}
     >
-      <h1>Items</h1>
+      <h1>Items Menu</h1>
       <Button
         variant="primary"
         type="button"
