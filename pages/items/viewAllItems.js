@@ -27,20 +27,24 @@ export default function ViewItems() {
   };
 
   return (
-    <>
-      <h1>Items</h1>
-      <div>
-        <SearchBar handleSearch={handleSearch} />
+    <div>
+      <div className="full-page-background my-items-background" />
+      <div className="overlay" />
+      <div className="content-container">
+        <h1 className="text-center margin-y-large">My Items</h1>
+        <div className="search-bar-container">
+          <SearchBar handleSearch={handleSearch} />
+        </div>
+        <div className="d-flex flex-wrap item-cards-container">
+          {filteredItems.length > 0 ? (
+            filteredItems.map((item) => (
+              <ItemCard key={item.id} itemObj={item} onUpdate={getAllUserItems} />
+            ))
+          ) : (
+            <p>No items found.</p>
+          )}
+        </div>
       </div>
-      <div className="d-flex flex-wrap">
-        {filteredItems.length > 0 ? (
-          filteredItems.map((item) => (
-            <ItemCard key={item.id} itemObj={item} onUpdate={getAllUserItems} />
-          ))
-        ) : (
-          <p>No items found.</p>
-        )}
-      </div>
-    </>
+    </div>
   );
 }

@@ -21,13 +21,17 @@ export default function ViewRooms() {
   }, []);
 
   return (
-    <>
-      <h1>My Rooms</h1>
-      <div className="d-flex flex-wrap">
-        {rooms.map((room) => (
-          <RoomCard key={room.id} roomObj={room} onUpdate={getAllUserRooms} />
-        ))}
+    <div>
+      <div className="full-page-background my-rooms-background" />
+      <div className="overlay" />
+      <div className="content-container">
+        <h1 className="text-center margin-y-large">My Rooms</h1>
+        <div className="d-flex flex-wrap">
+          {rooms.map((room) => (
+            <RoomCard key={room.id} roomObj={room} onUpdate={getAllUserRooms} />
+          ))}
+        </div>
       </div>
-    </>
+    </div>
   );
 }

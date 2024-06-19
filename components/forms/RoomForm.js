@@ -49,35 +49,42 @@ function CreateRoomForm({ roomObj }) {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <h2 className="text-white mt-5">{roomObj.id ? 'Update Room' : 'Create Room'}</h2>
+    <div>
+      <div className="full-page-background my-rooms-background" />
+      <div className="overlay" />
+      <div className="content-container">
+        <Form onSubmit={handleSubmit}>
+          <h2 className="text-white mt-5">{roomObj.id ? 'Update Room' : 'Create Room'}</h2>
 
-      {/* ROOM NAME INPUT */}
-      <FloatingLabel controlId="floatingInput1" label="Room Name" className="mb-3">
-        <Form.Control
-          type="text"
-          placeholder="Room Name"
-          name="name"
-          value={formInput.name}
-          onChange={handleChange}
-          required
-        />
-      </FloatingLabel>
+          {/* ROOM NAME INPUT */}
+          <FloatingLabel controlId="floatingInput1" label="Room Name" className="mb-3">
+            <Form.Control
+              type="text"
+              placeholder="Room Name"
+              name="name"
+              value={formInput.name}
+              onChange={handleChange}
+              required
+            />
+          </FloatingLabel>
 
-      {/* ROOM IMAGE INPUT  */}
-      <FloatingLabel controlId="floatingInput2" label="Room Image" className="mb-3">
-        <Form.Control
-          type="url"
-          placeholder="Enter an image url"
-          name="image"
-          value={formInput.image}
-          onChange={handleChange}
-          required
-        />
-      </FloatingLabel>
+          {/* ROOM IMAGE INPUT */}
+          <FloatingLabel controlId="floatingInput2" label="Room Image" className="mb-3">
+            <Form.Control
+              type="url"
+              placeholder="Enter an image url"
+              name="image"
+              value={formInput.image}
+              onChange={handleChange}
+              required
+            />
+          </FloatingLabel>
 
-      <Button type="submit">{roomObj.id ? 'Update Room' : 'Create Room'}</Button>
-    </Form>
+          {/* SUBMIT BUTTON */}
+          <Button type="submit">{roomObj.id ? 'Update Room' : 'Create Room'}</Button>
+        </Form>
+      </div>
+    </div>
   );
 }
 

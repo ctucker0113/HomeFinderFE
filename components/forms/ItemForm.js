@@ -104,108 +104,116 @@ function ItemForm({ itemObj }) {
       createItem(payload).then((newItem) => {
         // Add tags to the newly created item
         selectedTags.forEach((tagId) => createItemTagRelationship(newItem.id, tagId));
-        router.push('/items/ViewAllItems');
+        router.push('/items/viewAllItems');
       });
     }
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <h2 className="text-white mt-5">{itemObj.id ? 'Update Item' : 'Create Item'}</h2>
+    <div>
+      <div className="full-page-background my-items-background" />
+      <div className="overlay" />
+      <div className="content-container">
+        <Form onSubmit={handleSubmit}>
+          <h2 className="mt-5 text-black">{itemObj.id ? 'Update Item' : 'Create Item'}</h2>
 
-      {/* ITEM NAME INPUT */}
-      <FloatingLabel controlId="floatingInput1" label="Item Name" className="mb-3">
-        <Form.Control
-          type="text"
-          placeholder="Item Name"
-          name="name"
-          value={formInput.name}
-          onChange={handleChange}
-          required
-        />
-      </FloatingLabel>
-
-      {/* ITEM IMAGE INPUT  */}
-      <FloatingLabel controlId="floatingInput2" label="Item Image" className="mb-3">
-        <Form.Control
-          type="url"
-          placeholder="Enter an image url"
-          name="image"
-          value={formInput.image}
-          onChange={handleChange}
-          required
-        />
-      </FloatingLabel>
-
-      {/* ROOM SELECT  */}
-      <FloatingLabel controlId="floatingSelect" label="Room">
-        <Form.Select
-          aria-label="Room"
-          name="roomID"
-          onChange={handleChange}
-          className="mb-3"
-          value={formInput.roomID}
-        >
-          <option value="">Add to Which Room?</option>
-          {
-              rooms.map((room) => (
-                <option
-                  key={room.ID}
-                  value={room.ID}
-                >
-                  {room.name}
-                </option>
-              ))
-            }
-        </Form.Select>
-      </FloatingLabel>
-
-      {/* TAGS CHECKBOXES */}
-      {itemObj.id && (
-        <>
-          <h3 className="text-white mt-5">Remove Tags</h3>
-          {itemTags.map((tag) => (
-            <Form.Check
-              key={`remove-${tag.id}`}
-              type="checkbox"
-              label={tag.name}
-              value={tag.id}
-              onChange={handleTagRemoveChange}
-              checked={tagsToRemove.has(tag.id)}
+          {/* ITEM NAME INPUT */}
+          <FloatingLabel controlId="floatingInput1" label="Item Name" className="mb-3">
+            <Form.Control
+              type="text"
+              placeholder="Item Name"
+              name="name"
+              value={formInput.name}
+              onChange={handleChange}
+              required
             />
-          ))}
-          <h3 className="text-white mt-5">Add Tags</h3>
-          {tags.filter((tag) => !itemTags.some((itemTag) => itemTag.id === tag.id)).map((tag) => (
-            <Form.Check
-              key={`add-${tag.id}`}
-              type="checkbox"
-              label={tag.name}
-              value={tag.id}
-              onChange={handleTagChange}
-              checked={selectedTags.has(tag.id)}
-            />
-          ))}
-        </>
-      )}
-      {!itemObj.id && (
-        <>
-          <h3 className="text-white mt-5">Add Tags</h3>
-          {tags.map((tag) => (
-            <Form.Check
-              key={`add-${tag.id}`}
-              type="checkbox"
-              label={tag.name}
-              value={tag.id}
-              onChange={handleTagChange}
-              checked={selectedTags.has(tag.id)}
-            />
-          ))}
-        </>
-      )}
+          </FloatingLabel>
 
-      {/* SUBMIT BUTTON  */}
-      <Button type="submit">{itemObj.id ? 'Update Item' : 'Create Item'}</Button>
-    </Form>
+          {/* ITEM IMAGE INPUT */}
+          <FloatingLabel controlId="floatingInput2" label="Item Image" className="mb-3">
+            <Form.Control
+              type="url"
+              placeholder="Enter an image url"
+              name="image"
+              value={formInput.image}
+              onChange={handleChange}
+              required
+            />
+          </FloatingLabel>
+
+          {/* ROOM SELECT */}
+          <FloatingLabel controlId="floatingSelect" label="Room">
+            <Form.Select
+              aria-label="Room"
+              name="roomID"
+              onChange={handleChange}
+              className="mb-3"
+              value={formInput.roomID}
+            >
+              <option value="">Add to Which Room?</option>
+              {
+                rooms.map((room) => (
+                  <option
+                    key={room.ID}
+                    value={room.ID}
+                  >
+                    {room.name}
+                  </option>
+                ))
+              }
+            </Form.Select>
+          </FloatingLabel>
+
+          {/* TAGS CHECKBOXES */}
+          {itemObj.id && (
+            <>
+              <h3 className="mt-5 text-black">Remove Tags</h3>
+              {itemTags.map((tag) => (
+                <Form.Check
+                  key={`remove-${tag.id}`}
+                  type="checkbox"
+                  label={tag.name}
+                  value={tag.id}
+                  onChange={handleTagRemoveChange}
+                  checked={tagsToRemove.has(tag.id)}
+                  className="text-black"
+                />
+              ))}
+              <h3 className="mt-5 text-black">Add Tags</h3>
+              {tags.filter((tag) => !itemTags.some((itemTag) => itemTag.id === tag.id)).map((tag) => (
+                <Form.Check
+                  key={`add-${tag.id}`}
+                  type="checkbox"
+                  label={tag.name}
+                  value={tag.id}
+                  onChange={handleTagChange}
+                  checked={selectedTags.has(tag.id)}
+                  className="text-black"
+                />
+              ))}
+            </>
+          )}
+          {!itemObj.id && (
+            <>
+              <h3 className="mt-5 text-black">Add Tags</h3>
+              {tags.map((tag) => (
+                <Form.Check
+                  key={`add-${tag.id}`}
+                  type="checkbox"
+                  label={tag.name}
+                  value={tag.id}
+                  onChange={handleTagChange}
+                  checked={selectedTags.has(tag.id)}
+                />
+              ))}
+            </>
+          )}
+
+          {/* SUBMIT BUTTON */}
+          <Button type="submit">{itemObj.id ? 'Update Item' : 'Create Item'}</Button>
+        </Form>
+      </div>
+    </div>
   );
 }
 

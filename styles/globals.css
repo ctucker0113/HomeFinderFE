@@ -1,11 +1,11 @@
 @import 'bootstrap/dist/css/bootstrap.css';
 
-html,
-body {
+html, body {
+  height: 100%;
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
 a {
@@ -18,7 +18,7 @@ a {
 }
 
 body {
-  background-color: #88effd;
+  background-color: #98FB98;
 }
 
 .itemCard, .roomCard {
@@ -36,4 +36,59 @@ body {
   width: 100%;
   height: 10rem; /* Set a fixed height for the image */
   object-fit: cover; 
+}
+
+.text-center {
+  text-align: center;
+}
+
+.margin-y-large {
+  margin-top: 2rem; /* Adjust the value as needed */
+  margin-bottom: 2rem; /* Adjust the value as needed */
+}
+
+.full-page-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover; /* Ensure the background covers the entire area */
+  z-index: -2; /* Ensure it is behind other content */
+}
+
+.my-items-background {
+  background: url('/MyItemsBackground.jpg') no-repeat center center;
+  background-size: cover; /* Adjust this to cover the entire area */
+}
+
+.my-rooms-background {
+  background: url('/MyRoomsBackground.jpeg') no-repeat center center;
+  background-size: cover; /* Adjust this to cover the entire area */
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.5); /* Adjust the transparency here */
+  z-index: -1; /* Ensure it is behind the content */
+}
+
+.content-container {
+  position: relative;
+  z-index: 1; /* Ensure content appears above the background */
+  padding: 20px; /* Adjust padding as needed */
+  padding-top: 120px;
+}
+
+.navbar-nav .dropdown-menu {
+  display: none;
+}
+
+.navbar-nav .dropdown:hover .dropdown-menu {
+  display: block;
+  margin-top: 0; /* Remove the margin so it aligns perfectly */
 }
