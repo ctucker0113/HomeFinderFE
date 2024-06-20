@@ -37,15 +37,19 @@ export default function ViewAllItemsInARoom() {
 
   return (
     <div>
-      <h1>Items in {roomName}</h1>
-      <div className="d-flex flex-wrap">
-        {items.length > 0 ? (
-          items.map((item) => (
-            <ItemCard key={item.id} itemObj={item} onUpdate={viewAllRoomItems} />
-          ))
-        ) : (
-          <p>No items found in this room.</p>
-        )}
+      <div className="full-page-background my-rooms-background" />
+      <div className="overlay" />
+      <div className="content-container">
+        <h1>Items in {roomName}</h1>
+        <div className="d-flex flex-wrap">
+          {items.length > 0 ? (
+            items.map((item) => (
+              <ItemCard key={item.id} itemObj={item} onUpdate={viewAllRoomItems} />
+            ))
+          ) : (
+            <p>No items found in this room.</p>
+          )}
+        </div>
       </div>
     </div>
   );

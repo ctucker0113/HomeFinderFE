@@ -15,7 +15,7 @@ function Home() {
       <img
         src="/HomeFinderLogo.webp"
         alt="HomeFinder Logo"
-        style={{ maxWidth: '100%', height: 'auto' }}
+        style={{ maxWidth: '100%', height: 'auto', borderRadius: '50%' }}
         className="mb-4 mx-auto"
       />
       <h1>Hello {user.displayName}! </h1>

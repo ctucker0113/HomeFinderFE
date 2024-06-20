@@ -18,7 +18,7 @@ a {
 }
 
 body {
-  background-color: #98FB98;
+  background-color: #E5E4E2;
 }
 
 .itemCard, .roomCard {
@@ -91,4 +91,47 @@ body {
 .navbar-nav .dropdown:hover .dropdown-menu {
   display: block;
   margin-top: 0; /* Remove the margin so it aligns perfectly */
+}
+
+.signin-container {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 30px;
+  margin: 0 auto;
+  z-index: 1;
+  background: url('/path/to/your/background/image.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+.logo-container {
+  margin-bottom: 20px;
+}
+
+.logo {
+  width: 400px; /* Adjust size as needed */
+  height: auto;
+  border-radius: 50%;
+}
+
+.welcome-message {
+  margin: 20px 0;
+  font-size: 2rem;
+  color: #333; /* Adjust color as needed */
+}
+
+.description {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  color: #555; /* Adjust color as needed */
+  max-width: 600px;
+  line-height: 1.5;
+}
+
+.sign-in-btn {
+  font-size: 1.2rem;
+  padding: 10px 20px;
 }

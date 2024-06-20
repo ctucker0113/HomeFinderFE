@@ -38,7 +38,8 @@ function ItemForm({ itemObj }) {
       // Fetch tags for the specific item
       getAllTagsForSingleItem(itemObj.id).then((itemTagsData) => {
         setItemTags(itemTagsData);
-        setTagsToRemove(new Set(itemTagsData.map((tag) => tag.id)));
+        // Remove the following line to avoid pre-checking tags for removal
+        // setTagsToRemove(new Set(itemTagsData.map((tag) => tag.id)));
       });
     }
   }, [itemObj]);
@@ -175,7 +176,7 @@ function ItemForm({ itemObj }) {
                   label={tag.name}
                   value={tag.id}
                   onChange={handleTagRemoveChange}
-                  checked={tagsToRemove.has(tag.id)}
+                  checked={tagsToRemove.has(tag.id)} // No initial check
                   className="text-black"
                 />
               ))}

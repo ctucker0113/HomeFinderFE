@@ -4,22 +4,16 @@ import { signIn } from '../utils/auth';
 
 function Signin() {
   return (
-    <div
-      className="text-center d-flex flex-column justify-content-center align-content-center"
-      style={{
-        height: '90vh',
-        padding: '30px',
-        margin: '0 auto',
-        zIndex: 1,
-        minHeight: '25rem',
-        width: '100%',
-        minWidth: '30rem',
-        paddingBlock: '0 5rem',
-      }}
-    >
-      <h1>Hi there!</h1>
-      <p>Click the button below to login!</p>
-      <Button type="button" size="lg" className="copy-btn" onClick={signIn}>
+    <div className="signin-container">
+      <div className="logo-container">
+        <img src="/HomeFinderLogo.webp" alt="HomeFinder Logo" className="logo" />
+      </div>
+      <h1 className="welcome-message">Welcome to HomeFinder!</h1>
+      <p className="description">
+        HomeFinder is a home inventory app that helps you keep track of the locations of every important item in your house.
+        Create a digital database of your items and never lose track of your valuables again!
+      </p>
+      <Button type="button" size="lg" className="sign-in-btn" onClick={signIn}>
         Sign In
       </Button>
     </div>
