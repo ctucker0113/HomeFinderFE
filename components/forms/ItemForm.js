@@ -5,7 +5,7 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import { Button } from 'react-bootstrap';
 import { createItem, updateItem } from '../../api/itemAPI';
-import { getAllRooms, getSingleRoomByName } from '../../api/roomAPI';
+import { getAllRooms, getSingleRoom, getSingleRoomByName } from '../../api/roomAPI';
 import { getAllTags } from '../../api/tagAPI';
 import { getAllTagsForSingleItem, createItemTagRelationship, deleteItemTagRelationship } from '../../api/itemTagAPI';
 
@@ -40,6 +40,15 @@ function ItemForm({ itemObj }) {
         setItemTags(itemTagsData);
         // Remove the following line to avoid pre-checking tags for removal
         // setTagsToRemove(new Set(itemTagsData.map((tag) => tag.id)));
+      });
+
+      // Fetch room details by roomID and log it
+      getSingleRoom(itemObj.roomID).then((room) => {
+        console.log('Room details:', room); // Log room details to verify
+        setFormInput((prevFormInput) => ({
+          ...prevFormInput,
+          roomID: room.name, // Ensure the room ID is set correctly
+        }));
       });
     }
   }, [itemObj]);
@@ -223,6 +232,7 @@ ItemForm.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string,
     image: PropTypes.string,
+    roomID: PropTypes.number,
   }),
 };
 
