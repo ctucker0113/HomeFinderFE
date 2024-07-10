@@ -7,6 +7,7 @@ import ItemCard from '../../components/ItemCard';
 export default function ViewAllItemsInARoom() {
   const [items, setItems] = useState([]);
   const [roomName, setRoomName] = useState('');
+  const [roomImage, setRoomImage] = useState(''); // State to store room image URL
   const router = useRouter();
   const { id } = router.query;
 
@@ -24,6 +25,7 @@ export default function ViewAllItemsInARoom() {
 
       const roomDetails = await getSingleRoom(id);
       setRoomName(roomDetails.name || '');
+      setRoomImage(roomDetails.image || ''); // Set room image URL
     } catch (error) {
       setItems([]); // Ensure items is an empty array on error
     }
@@ -37,7 +39,8 @@ export default function ViewAllItemsInARoom() {
 
   return (
     <div>
-      <div className="full-page-background my-rooms-background" />
+      {/* Set the background image dynamically */}
+      <div className="full-page-background" style={{ backgroundImage: `url(${roomImage})` }} />
       <div className="overlay" />
       <div className="content-container">
         <h1>Items in {roomName}</h1>
