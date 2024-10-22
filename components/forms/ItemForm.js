@@ -116,7 +116,6 @@ function ItemForm({ itemObj }) {
         tagsToRemove.forEach((tagId) => {
           if (existingItemTags.has(tagId)) { // Only remove existing tags
             const itemTagID = `${itemObj.firebaseKey}_${tagId}`; // Generate the itemTagID
-            console.log(`Looking for firebaseKey to remove for itemTagID: ${itemTagID}`);
 
             // Fetch the firebaseKey for this itemTagID
             const removeTagPromise = getFirebaseKeyByItemTagID(itemTagID)
