@@ -104,13 +104,9 @@ function ItemForm({ itemObj }) {
     if (itemObj.firebaseKey) {
       // Update the item
       updateItem(formInput).then(() => {
-        console.log('Selected tags to add:', selectedTags);
-        console.log('Tags to remove:', tagsToRemove);
-
         // Add new tags
         selectedTags.forEach((tagId) => {
           if (!existingItemTags.has(tagId)) { // Only add new tags
-            console.log(`Adding tag: ${tagId}`);
             createItemTagRelationship(itemObj.firebaseKey, tagId);
           }
         });
@@ -124,13 +120,7 @@ function ItemForm({ itemObj }) {
 
             // Fetch the firebaseKey for this itemTagID
             const removeTagPromise = getFirebaseKeyByItemTagID(itemTagID)
-              .then((firebaseKey) => {
-                console.log(`Removing tag with firebaseKey: ${firebaseKey}`);
-                return deleteItemTagRelationship(firebaseKey); // Use firebaseKey to delete
-              })
-              .catch((error) => {
-                console.error(`Error fetching firebaseKey for itemTagID: ${itemTagID}`, error);
-              });
+              .then((firebaseKey) => deleteItemTagRelationship(firebaseKey)); // Use firebaseKey to delete
 
             removeTagPromises.push(removeTagPromise); // Add the promise to the list
           }
