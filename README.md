@@ -22,4 +22,4 @@ https://homedb.netlify.app/
 - Firebase
 
 ## Contributors
-- [Cody Tucker](github.com/ctucker0113)
+- [Cody Tucker](https://github.com/ctucker0113)
