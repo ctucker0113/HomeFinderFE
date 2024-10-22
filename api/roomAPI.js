@@ -3,9 +3,9 @@ import { clientCredentials } from "../utils/client";
 // URL TO DATABASE FOR PROMISES/API CALLS
 const endpoint = clientCredentials.databaseURL;
 
-// Get All Rooms
-const getAllRooms = () => new Promise((resolve, reject) => {
-  fetch(`${endpoint}/api/getAllRooms`, {
+// Get All Rooms For a Single User
+const getAllRooms = (uid) => new Promise((resolve, reject) => {
+  fetch(`${endpoint}/Rooms.json?orderBy="userID"&equalTo="${uid}"`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -17,8 +17,8 @@ const getAllRooms = () => new Promise((resolve, reject) => {
 });
 
 // Get Single Room by ID
-const getSingleRoom = (id) => new Promise((resolve, reject) => {
-  fetch(`${endpoint}/api/getSingleRoom/${id}`, {
+const getSingleRoom = (firebaseKey) => new Promise((resolve, reject) => {
+  fetch(`${endpoint}/Rooms/${firebaseKey}.json`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ const getSingleRoom = (id) => new Promise((resolve, reject) => {
 
 // Create New Room
 const createRoom = (payload) => new Promise((resolve, reject) => {
-  fetch(`${endpoint}/api/createRoom`, {
+  fetch(`${endpoint}/Rooms.json`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -44,8 +44,8 @@ const createRoom = (payload) => new Promise((resolve, reject) => {
 });
 
 // Delete Room
-const deleteRoom = (id) => new Promise((resolve, reject) => {
-    fetch(`${endpoint}/api/deleteRoom/${id}`, {
+const deleteRoom = (firebaseKey) => new Promise((resolve, reject) => {
+    fetch(`${endpoint}/Rooms/${firebaseKey}.json`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const deleteRoom = (id) => new Promise((resolve, reject) => {
 
   // Update Room
 const updateRoom = (payload) => new Promise((resolve, reject) => {
-    fetch(`${endpoint}/api/updateRoom/${payload.id}`, {
+    fetch(`${endpoint}/Rooms/${payload.firebaseKey}.json`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ const updateRoom = (payload) => new Promise((resolve, reject) => {
 
   // Get a Single Room By Name
 const getSingleRoomByName = (name) => new Promise((resolve, reject) => {
-  fetch(`${endpoint}/api/getSingleRoomByName/${name}`, {
+  fetch(`${endpoint}/Rooms/${name}.json`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

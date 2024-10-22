@@ -1,0 +1,32 @@
+{
+    "-NjjUSLjJ0h_p8MSjsHM": {
+        "firebaseKey": "-NjjUSLjJ0h_p8MSjsHM",
+        "name": "Bedroom",
+        "image": "https://hips.hearstapps.com/hmg-prod/images/ghk090123homefeature-005-655b97aee4cbc.jpg?crop=0.828xw:1.00xh;0,0&resize=980:*",
+        "userID": "DEQOPB1zCIh6UUYxEclgunPSVle2"
+    },
+    "-NjjUSLjJ0h_p8MSjsHN": {
+        "firebaseKey": "-NjjUSLjJ0h_p8MSjsHN",
+        "name": "Garage",
+        "image": "https://www.realsimple.com/thmb/VeovlLwOeeZUweFGCdPA97yrNzc=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/what-not-to-store-in-a-garage-GettyImages-528094494-61fda36cad814a338fba3cda15073163.jpg",
+        "userID": "DEQOPB1zCIh6UUYxEclgunPSVle2"
+    },
+    "-NjjUSLjJ0h_p8MSjsHO": {
+        "firebaseKey": "-NjjUSLjJ0h_p8MSjsHO",
+        "name": "Kitchen",
+        "image": "https://www.ikea.com/ext/ingkadam/m/7d967a35b0d7f7fd/original/PH194740.jpg",
+        "userID": "NqY3CPqx9AUfL2vH0fn1bmPGP9G2"
+    },
+    "-NjjUSLjJ0h_p8MSjsHP": {
+        "firebaseKey": "-NjjUSLjJ0h_p8MSjsHP",
+        "name": "Bathroom",
+        "image": "https://www.houselogic.com/wp-content/uploads/2023/08/easy-clean-modern-bathroom-hero.jpg?crop&resize=2048%2C1365&quality=80",
+        "userID": "NqY3CPqx9AUfL2vH0fn1bmPGP9G2"
+    },
+    "-NjjUSLjJ0h_p8MSjsHQ": {
+        "firebaseKey": "-NjjUSLjJ0h_p8MSjsHQ",
+        "name": "Living Room",
+        "image": "https://media.architecturaldigest.com/photos/62f3c04c5489dd66d1d538b9/16:9/w_2560%2Cc_limit/_Hall_St_0256_v2.jpeg",
+        "userID": "NqY3CPqx9AUfL2vH0fn1bmPGP9G2"
+    }
+}

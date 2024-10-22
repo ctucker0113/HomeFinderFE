@@ -6,11 +6,11 @@ import { getSingleRoom } from '../../../api/roomAPI';
 export default function EditRoomForm() {
   const [editRoom, setEditRoom] = useState({});
   const router = useRouter();
-  const { id } = router.query;
+  const { firebaseKey } = router.query;
 
   useEffect(() => {
-    getSingleRoom(id).then(setEditRoom);
-  }, [id]);
+    getSingleRoom(firebaseKey).then(setEditRoom);
+  }, [firebaseKey]);
 
   return (
     <CreateRoomForm roomObj={editRoom} />

@@ -2,13 +2,15 @@ import { useEffect, useState } from 'react';
 import { getAllItems } from '../../api/itemAPI';
 import SearchBar from '../../components/SearchBar';
 import ItemCard from '../../components/ItemCard';
+import { useAuth } from '../../utils/context/authContext';
 
 export default function ViewItems() {
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
+  const { user } = useAuth();
 
   const getAllUserItems = () => {
-    getAllItems().then((data) => {
+    getAllItems(user.uid).then((data) => {
       setItems(data);
       setFilteredItems(data);
     }).catch(() => {

@@ -1,54 +1,62 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import PropTypes from 'prop-types';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
+import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import { createItem, updateItem } from '../../api/itemAPI';
-import { getAllRooms, getSingleRoom, getSingleRoomByName } from '../../api/roomAPI';
+import { getAllRooms } from '../../api/roomAPI';
 import { getAllTags } from '../../api/tagAPI';
-import { getAllTagsForSingleItem, createItemTagRelationship, deleteItemTagRelationship } from '../../api/itemTagAPI';
+import {
+  getAllTagsForSingleItem,
+  createItemTagRelationship,
+  deleteItemTagRelationship,
+  getFirebaseKeyByItemTagID,
+} from '../../api/itemTagAPI';
+import { useAuth } from '../../utils/context/authContext';
 
 const initialState = {
   name: '',
   image: '',
   roomID: '',
+  userID: '',
 };
 
 function ItemForm({ itemObj }) {
   const [formInput, setFormInput] = useState(initialState);
   const [rooms, setRooms] = useState([]);
   const [tags, setTags] = useState([]);
-  const [itemTags, setItemTags] = useState([]);
-  const [selectedTags, setSelectedTags] = useState(new Set());
-  const [tagsToRemove, setTagsToRemove] = useState(new Set());
+  const [selectedTags, setSelectedTags] = useState(new Set()); // State for selected tags to add
+  const [tagsToRemove, setTagsToRemove] = useState(new Set()); // State for selected tags to remove
+  const [existingItemTags, setExistingItemTags] = useState(new Set()); // State for tags already associated with item
   const router = useRouter();
+  const { user } = useAuth();
 
+  // Fetch all rooms data to populate the "Rooms Dropdown"
   useEffect(() => {
-    // Fetch all rooms
-    getAllRooms().then(setRooms);
+    getAllRooms(user.uid).then(setRooms);
+  }, [user.uid]);
 
-    // Fetch all tags
-    getAllTags().then(setTags);
+  // Fetch all tags to populate the "Tags Checkboxes"
+  useEffect(() => {
+    getAllTags().then((fetchedTags) => {
+      setTags(fetchedTags);
+    }).catch((error) => {
+      console.error('Error fetching tags:', error);
+    });
+  }, []);
 
-    if (itemObj.id) {
-      // Populate form if itemObj is provided and has an id
+  // Fetch existing tags if editing an item
+  useEffect(() => {
+    if (itemObj.firebaseKey) {
       setFormInput(itemObj);
-
-      // Fetch tags for the specific item
-      getAllTagsForSingleItem(itemObj.id).then((itemTagsData) => {
-        setItemTags(itemTagsData);
-        // Remove the following line to avoid pre-checking tags for removal
-        // setTagsToRemove(new Set(itemTagsData.map((tag) => tag.id)));
-      });
-
-      // Fetch room details by roomID and log it
-      getSingleRoom(itemObj.roomID).then((room) => {
-        console.log('Room details:', room); // Log room details to verify
-        setFormInput((prevFormInput) => ({
-          ...prevFormInput,
-          roomID: room.name, // Ensure the room ID is set correctly
-        }));
+      // Fetch tags associated with the item
+      getAllTagsForSingleItem(itemObj.firebaseKey).then((itemTags) => {
+        const itemTagsMap = new Map(); // Create a Map for itemTagID
+        itemTags.forEach((tag) => {
+          itemTagsMap.set(tag.tagID, tag.itemTagID); // Store tagID and corresponding itemTagID
+        });
+        setExistingItemTags(itemTagsMap); // Now, existingItemTags will be a Map
       });
     }
   }, [itemObj]);
@@ -61,63 +69,85 @@ function ItemForm({ itemObj }) {
     });
   };
 
-  const handleTagChange = (e) => {
+  // Handle adding tags (to be associated with the item)
+  const handleTagAddChange = (e) => {
     const { value, checked } = e.target;
-    const tagId = parseInt(value, 10);
     const newSelectedTags = new Set(selectedTags);
+
     if (checked) {
-      newSelectedTags.add(tagId);
+      newSelectedTags.add(value);
     } else {
-      newSelectedTags.delete(tagId);
+      newSelectedTags.delete(value);
     }
+
     setSelectedTags(newSelectedTags);
   };
 
+  // Handle removing tags (to be disassociated from the item)
   const handleTagRemoveChange = (e) => {
     const { value, checked } = e.target;
-    const tagId = parseInt(value, 10);
     const newTagsToRemove = new Set(tagsToRemove);
+
     if (checked) {
-      newTagsToRemove.add(tagId);
+      newTagsToRemove.add(value);
     } else {
-      newTagsToRemove.delete(tagId);
+      newTagsToRemove.delete(value);
     }
+
     setTagsToRemove(newTagsToRemove);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const room = await getSingleRoomByName(formInput.roomID);
-    const payload = {
-      name: formInput.name,
-      image: formInput.image,
-      roomID: room.id,
-    };
+    // const room = await getSingleRoomByName(formInput.roomID);
 
-    if (itemObj.id) {
-      payload.id = itemObj.id;
-      updateItem(payload).then(() => {
-        // Handle tag removals
-        const currentTagIds = new Set(itemTags.map((tag) => tag.id));
-        const tagsToRemoveArray = [...currentTagIds].filter((tagId) => tagsToRemove.has(tagId));
-        const tagsToAddArray = [...selectedTags].filter((tagId) => !currentTagIds.has(tagId));
-
-        // Remove tags
-        tagsToRemoveArray.forEach((tagId) => deleteItemTagRelationship(itemObj.id, tagId));
-
+    if (itemObj.firebaseKey) {
+      // Update the item
+      updateItem(formInput).then(() => {
         // Add new tags
-        tagsToAddArray.forEach((tagId) => createItemTagRelationship(itemObj.id, tagId));
+        selectedTags.forEach((tagId) => {
+          if (!existingItemTags.has(tagId)) { // Only add new tags
+            createItemTagRelationship(itemObj.firebaseKey, tagId);
+          }
+        });
 
-        router.push('/items/viewAllItems');
+        // Remove selected tags
+        const removeTagPromises = [];
+        tagsToRemove.forEach((tagId) => {
+          if (existingItemTags.has(tagId)) { // Only remove existing tags
+            const itemTagID = `${itemObj.firebaseKey}_${tagId}`; // Generate the itemTagID
+
+            // Fetch the firebaseKey for this itemTagID
+            const removeTagPromise = getFirebaseKeyByItemTagID(itemTagID)
+              .then((firebaseKey) => deleteItemTagRelationship(firebaseKey)); // Use firebaseKey to delete
+
+            removeTagPromises.push(removeTagPromise); // Add the promise to the list
+          }
+        });
+
+        // Wait for all removal promises to complete
+        Promise.all(removeTagPromises).then(() => {
+          router.push('/items/viewAllItems');
+        });
       });
     } else {
-      createItem(payload).then((newItem) => {
-        // Add tags to the newly created item
-        selectedTags.forEach((tagId) => createItemTagRelationship(newItem.id, tagId));
-        router.push('/items/viewAllItems');
+      // Create a new item
+      const payload = { ...formInput, userID: user.uid }; // Patch in user's ID into the payload
+      createItem(payload).then(({ name }) => {
+        const patchPayload = { firebaseKey: name }; // Patch in the item's firebaseKey into the item object itself
+        updateItem(patchPayload).then(() => {
+          selectedTags.forEach((tagId) => {
+            createItemTagRelationship(name, tagId);
+          });
+          router.push('/items/viewAllItems');
+        });
       });
     }
   };
+
+  // Split tags into two groups: those associated with the item and those not
+  const associatedTags = tags.filter((tag) => existingItemTags.has(tag.firebaseKey)); // Tags already associated
+  const unassociatedTags = tags.filter((tag) => !existingItemTags.has(tag.firebaseKey)); // Tags not associated
 
   return (
     <div>
@@ -125,7 +155,7 @@ function ItemForm({ itemObj }) {
       <div className="overlay" />
       <div className="content-container">
         <Form onSubmit={handleSubmit}>
-          <h2 className="mt-5 text-black">{itemObj.id ? 'Update Item' : 'Create Item'}</h2>
+          <h2 className="mt-5 text-black">{itemObj.firebaseKey ? 'Update Item' : 'Create Item'}</h2>
 
           {/* ITEM NAME INPUT */}
           <FloatingLabel controlId="floatingInput1" label="Item Name" className="mb-3">
@@ -164,8 +194,8 @@ function ItemForm({ itemObj }) {
               {
                 rooms.map((room) => (
                   <option
-                    key={room.ID}
-                    value={room.ID}
+                    key={room.firebaseKey}
+                    value={room.firebaseKey}
                   >
                     {room.name}
                   </option>
@@ -174,53 +204,44 @@ function ItemForm({ itemObj }) {
             </Form.Select>
           </FloatingLabel>
 
-          {/* TAGS CHECKBOXES */}
-          {itemObj.id && (
-            <>
-              <h3 className="mt-5 text-black">Remove Tags</h3>
-              {itemTags.map((tag) => (
-                <Form.Check
-                  key={`remove-${tag.id}`}
-                  type="checkbox"
-                  label={tag.name}
-                  value={tag.id}
-                  onChange={handleTagRemoveChange}
-                  checked={tagsToRemove.has(tag.id)} // No initial check
-                  className="text-black"
-                />
-              ))}
-              <h3 className="mt-5 text-black">Add Tags</h3>
-              {tags.filter((tag) => !itemTags.some((itemTag) => itemTag.id === tag.id)).map((tag) => (
-                <Form.Check
-                  key={`add-${tag.id}`}
-                  type="checkbox"
-                  label={tag.name}
-                  value={tag.id}
-                  onChange={handleTagChange}
-                  checked={selectedTags.has(tag.id)}
-                  className="text-black"
-                />
-              ))}
-            </>
+          {/* REMOVE TAGS SECTION */}
+          <h3 className="mt-5 text-black">Remove Tags</h3>
+          {associatedTags.length > 0 ? (
+            associatedTags.map((tag) => (
+              <Form.Check
+                key={tag.firebaseKey}
+                type="checkbox"
+                label={tag.name}
+                value={tag.firebaseKey}
+                onChange={handleTagRemoveChange}
+                checked={tagsToRemove.has(tag.firebaseKey)} // Unchecked by default, will be checked when the user selects it
+                className="text-black"
+              />
+            ))
+          ) : (
+            <p>No tags associated with this item.</p>
           )}
-          {!itemObj.id && (
-            <>
-              <h3 className="mt-5 text-black">Add Tags</h3>
-              {tags.map((tag) => (
-                <Form.Check
-                  key={`add-${tag.id}`}
-                  type="checkbox"
-                  label={tag.name}
-                  value={tag.id}
-                  onChange={handleTagChange}
-                  checked={selectedTags.has(tag.id)}
-                />
-              ))}
-            </>
+
+          {/* ADD TAGS SECTION */}
+          <h3 className="mt-5 text-black">Add Tags</h3>
+          {unassociatedTags.length > 0 ? (
+            unassociatedTags.map((tag) => (
+              <Form.Check
+                key={tag.firebaseKey}
+                type="checkbox"
+                label={tag.name}
+                value={tag.firebaseKey}
+                onChange={handleTagAddChange}
+                checked={selectedTags.has(tag.firebaseKey)} // Unchecked by default, checked if selected
+                className="text-black"
+              />
+            ))
+          ) : (
+            <p>No tags available to add.</p>
           )}
 
           {/* SUBMIT BUTTON */}
-          <Button type="submit">{itemObj.id ? 'Update Item' : 'Create Item'}</Button>
+          <Button type="submit">{itemObj.firebaseKey ? 'Update Item' : 'Create Item'}</Button>
         </Form>
       </div>
     </div>
@@ -229,10 +250,11 @@ function ItemForm({ itemObj }) {
 
 ItemForm.propTypes = {
   itemObj: PropTypes.shape({
-    id: PropTypes.number,
+    firebaseKey: PropTypes.string,
     name: PropTypes.string,
     image: PropTypes.string,
-    roomID: PropTypes.number,
+    roomID: PropTypes.string,
+    userID: PropTypes.string,
   }),
 };
 

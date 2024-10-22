@@ -3,9 +3,9 @@ import { clientCredentials } from "../utils/client";
 // URL TO DATABASE FOR PROMISES/API CALLS
 const endpoint = clientCredentials.databaseURL;
 
-// Get All Items
-const getAllItems = () => new Promise((resolve, reject) => {
-    fetch(`${endpoint}/api/getAllItems`, {
+// Get All Items for a Single User
+const getAllItems = (uid) => new Promise((resolve, reject) => {
+    fetch(`${endpoint}/Items.json?orderBy="userID"&equalTo="${uid}"`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -17,7 +17,7 @@ const getAllItems = () => new Promise((resolve, reject) => {
   });
 
   const getAllItemsInARoom = (roomID) => new Promise((resolve, reject) => {
-    fetch(`${endpoint}/api/getAllItemsByRoom/${roomID}`, {
+    fetch(`${endpoint}/Items.json?orderBy="roomID"&equalTo="${roomID}"`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -38,8 +38,8 @@ const getAllItems = () => new Promise((resolve, reject) => {
   });
 
 // Get Single Item
-const getSingleItem = (id) => new Promise((resolve, reject) => {
-  fetch(`${endpoint}/api/getSingleItem/${id}`, {
+const getSingleItem = (firebaseKey) => new Promise((resolve, reject) => {
+  fetch(`${endpoint}/Items/${firebaseKey}.json`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -52,7 +52,8 @@ const getSingleItem = (id) => new Promise((resolve, reject) => {
 
 // Create New Item
 const createItem = (payload) => new Promise((resolve, reject) => {
-  fetch(`${endpoint}/api/createItem`, {
+
+  fetch(`${endpoint}/Items.json`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -64,9 +65,9 @@ const createItem = (payload) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-  // Update Room
+  // Update Item
   const updateItem = (payload) => new Promise((resolve, reject) => {
-    fetch(`${endpoint}/api/updateItem/${payload.id}`, {
+    fetch(`${endpoint}/Items/${payload.firebaseKey}.json`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -79,8 +80,8 @@ const createItem = (payload) => new Promise((resolve, reject) => {
   });
 
 // Delete Item
-const deleteItem = (id) => new Promise((resolve, reject) => {
-    fetch(`${endpoint}/api/deleteItem/${id}`, {
+const deleteItem = (firebaseKey) => new Promise((resolve, reject) => {
+    fetch(`${endpoint}/Items/${firebaseKey}.json`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -93,9 +94,9 @@ const deleteItem = (id) => new Promise((resolve, reject) => {
 
 export {
     getAllItems,
-    getAllItemsInARoom,
     getSingleItem,
     createItem,
     updateItem,
-    deleteItem
+    deleteItem,
+    getAllItemsInARoom
 }

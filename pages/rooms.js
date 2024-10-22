@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 import { getAllRooms } from '../api/roomAPI';
 import RoomCard from '../components/RoomCard';
+import { useAuth } from '../utils/context/authContext';
 
 export default function ViewRooms() {
   const [rooms, setRooms] = useState([]);
 
+  const { user } = useAuth();
+
   const getAllUserRooms = () => {
-    getAllRooms()
+    getAllRooms(user.uid)
       .then((data) => {
         console.warn('Fetched rooms:', data);
         setRooms(data);
