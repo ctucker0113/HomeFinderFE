@@ -64,20 +64,6 @@ const createItemTagRelationship = (itemID, tagID) => {
   });
 };
 
-// const deleteItemTagRelationship = (itemTagID) => new Promise((resolve, reject) => {
-//   // For database querying purposes, create the itemTagID from the arguments passed into the function.   
-
-//   fetch(`${endpoint}/ItemTags/${itemTagID}.json`, {
-//     method: 'DELETE',
-//     headers: {
-//       'Content-Type': 'applicaton/json',
-//     },
-//   })
-//     .then((response) => response.text())
-//     .then((data) => resolve(data))
-//     .catch(reject);
-// });
-
 const getFirebaseKeyByItemTagID = (itemTagID) => {
   return new Promise((resolve, reject) => {
     fetch(`${endpoint}/ItemTags.json`, {
