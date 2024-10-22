@@ -11,8 +11,8 @@ HomeFinder is a home inventory app that helps you keep track of the locations of
 ## Video Walkthrough
 https://www.loom.com/share/2c263a4a70bb4c63a9f2dd87143cd423?sid=984e5445-0f4a-4eb8-820c-bdb4aa625a5d
 
-## Check out the site here!
-https://homedb.netlify.app/
+## Check out the site [here](https://homedb.netlify.app/)!
+
 
 ## Tech Stack
 - NextJS
