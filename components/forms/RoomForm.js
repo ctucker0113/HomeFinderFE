@@ -5,6 +5,7 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import { Button } from 'react-bootstrap';
 import { createRoom, updateRoom } from '../../api/roomAPI';
+import { useAuth } from '../../utils/context/authContext';
 
 const initialState = {
   name: '',
@@ -14,6 +15,7 @@ const initialState = {
 function CreateRoomForm({ roomObj }) {
   const [formInput, setFormInput] = useState(initialState);
   const router = useRouter();
+  const { user } = useAuth();
 
   // Define the handleChange function to update formInput
   const handleChange = (e) => {
@@ -25,15 +27,15 @@ function CreateRoomForm({ roomObj }) {
   };
 
   useEffect(() => {
-    // Populate form if roomObj is provided and has an id
-    if (roomObj.id) {
+    // Populate form if roomObj is provided and has a Firebase Key
+    if (roomObj.firebaseKey) {
       setFormInput(roomObj);
     }
   }, [roomObj]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (roomObj.id) {
+    if (roomObj.firebaseKey) {
       updateRoom(formInput).then(() => {
         router.push('/rooms');
       });
@@ -41,9 +43,13 @@ function CreateRoomForm({ roomObj }) {
       const payload = {
         name: formInput.name,
         image: formInput.image,
+        userID: user.uid,
       };
-      createRoom(payload).then(() => {
-        router.push('/rooms');
+      createRoom(payload).then(({ name }) => {
+        const patchPayload = { firebaseKey: name };
+        updateRoom(patchPayload).then(() => {
+          router.push('/rooms');
+        });
       });
     }
   };
@@ -54,7 +60,7 @@ function CreateRoomForm({ roomObj }) {
       <div className="overlay" />
       <div className="content-container">
         <Form onSubmit={handleSubmit}>
-          <h2 className="text-white mt-5">{roomObj.id ? 'Update Room' : 'Create Room'}</h2>
+          <h2 className="text-white mt-5">{roomObj.firebaseKey ? 'Update Room' : 'Create Room'}</h2>
 
           {/* ROOM NAME INPUT */}
           <FloatingLabel controlId="floatingInput1" label="Room Name" className="mb-3">
@@ -81,7 +87,7 @@ function CreateRoomForm({ roomObj }) {
           </FloatingLabel>
 
           {/* SUBMIT BUTTON */}
-          <Button type="submit">{roomObj.id ? 'Update Room' : 'Create Room'}</Button>
+          <Button type="submit">{roomObj.firebaseKey ? 'Update Room' : 'Create Room'}</Button>
         </Form>
       </div>
     </div>
@@ -90,7 +96,7 @@ function CreateRoomForm({ roomObj }) {
 
 CreateRoomForm.propTypes = {
   roomObj: PropTypes.shape({
-    id: PropTypes.number,
+    firebaseKey: PropTypes.string,
     name: PropTypes.string,
     image: PropTypes.string,
   }),

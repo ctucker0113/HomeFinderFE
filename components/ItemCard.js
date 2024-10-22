@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { deleteItem } from '../api/itemAPI';
 import { getSingleRoom } from '../api/roomAPI';
 import { getAllTagsForSingleItem } from '../api/itemTagAPI';
+import { getSingleTag } from '../api/tagAPI';
 
 function ItemCard({ itemObj, onUpdate }) {
   const [roomName, setRoomName] = useState('');
@@ -22,19 +23,29 @@ function ItemCard({ itemObj, onUpdate }) {
       });
 
     // Fetch the tags associated with the item
-    getAllTagsForSingleItem(itemObj.id)
-      .then((tagsData) => {
-        setTags(tagsData);
+    getAllTagsForSingleItem(itemObj.firebaseKey)
+      .then((itemTags) => {
+        // For each itemTag, fetch the full tag information (including name)
+        const tagPromises = itemTags.map((itemTag) => getSingleTag(itemTag.tagID)); // Fetch the full tag object using tagID
+
+        // Resolve all tag promises and set the tags
+        Promise.all(tagPromises)
+          .then((fullTags) => {
+            setTags(fullTags); // Set the full tag data (with names) into state
+          })
+          .catch((error) => {
+            console.error('Error fetching tag details:', error);
+          });
       })
       .catch((error) => {
         console.error('Error fetching tags:', error);
       });
-  }, [itemObj.id, itemObj.roomID]);
+  }, [itemObj.firebaseKey, itemObj.roomID]);
 
   // Functionality for delete confirmation pop-up
   const deleteThisItem = () => {
     if (window.confirm(`Are you 1000% positive you want to delete ${itemObj.name}? This action cannot be undone.`)) {
-      deleteItem(itemObj.id).then(() => onUpdate());
+      deleteItem(itemObj.firebaseKey).then(() => onUpdate());
     }
   };
 
@@ -49,7 +60,7 @@ function ItemCard({ itemObj, onUpdate }) {
         <Card.Text>
           Tags: {tags.length > 0 ? tags.map((tag) => tag.name).join(', ') : 'No tags'}
         </Card.Text>
-        <Link href={`/items/edit/${itemObj.id}`} passHref>
+        <Link href={`/items/edit/${itemObj.firebaseKey}`} passHref>
           <Button variant="info">Edit/Move Item</Button>
         </Link>
         <Button variant="danger" onClick={deleteThisItem} className="m-2">Delete Item</Button>
@@ -60,10 +71,10 @@ function ItemCard({ itemObj, onUpdate }) {
 
 ItemCard.propTypes = {
   itemObj: PropTypes.shape({
-    id: PropTypes.number,
+    firebaseKey: PropTypes.string,
     name: PropTypes.string,
     image: PropTypes.string,
-    roomID: PropTypes.number,
+    roomID: PropTypes.string,
   }).isRequired,
   onUpdate: PropTypes.func.isRequired,
 };

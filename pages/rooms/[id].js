@@ -11,26 +11,23 @@ export default function ViewAllItemsInARoom() {
   const router = useRouter();
   const { id } = router.query;
 
-  const viewAllRoomItems = useCallback(async () => {
-    try {
-      const itemsInRoom = await getAllItemsInARoom(id);
+  // Fetch items and room details
+  const viewAllRoomItems = useCallback(() => {
+    if (id) {
+      // Fetch room details
+      getSingleRoom(id).then((roomData) => {
+        setRoomName(roomData.name);
+        setRoomImage(roomData.image);
+      });
 
-      if (typeof itemsInRoom === 'string' && itemsInRoom === 'No items found for this room.') {
-        setItems([]); // Handle the specific message from the backend
-      } else if (Array.isArray(itemsInRoom)) {
-        setItems(itemsInRoom); // Ensure items is an array
-      } else {
-        throw new Error('Unexpected response format');
-      }
-
-      const roomDetails = await getSingleRoom(id);
-      setRoomName(roomDetails.name || '');
-      setRoomImage(roomDetails.image || ''); // Set room image URL
-    } catch (error) {
-      setItems([]); // Ensure items is an empty array on error
+      // Fetch items in the room
+      getAllItemsInARoom(id).then((itemsData) => {
+        setItems(itemsData);
+      }).catch((error) => {
+        console.error('Error fetching items:', error);
+      });
     }
   }, [id]);
-
   useEffect(() => {
     if (id) {
       viewAllRoomItems();

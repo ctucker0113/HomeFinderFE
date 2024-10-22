@@ -5,7 +5,7 @@ const endpoint = clientCredentials.databaseURL;
 
 // Get All Tags
 const getAllTags = () => new Promise((resolve, reject) => {
-    fetch(`${endpoint}/api/getAllTags`, {
+    fetch(`${endpoint}/Tags.json`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -17,8 +17,8 @@ const getAllTags = () => new Promise((resolve, reject) => {
   });
   
   // Get Single Room by ID
-  const getSingleTag = (id) => new Promise((resolve, reject) => {
-    fetch(`${endpoint}/api/getSingleTag/${id}`, {
+  const getSingleTag = (firebaseKey) => new Promise((resolve, reject) => {
+    fetch(`${endpoint}/Tags/${firebaseKey}.json`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ const getAllTags = () => new Promise((resolve, reject) => {
   
   // Create New Tag
   const createTag = (payload) => new Promise((resolve, reject) => {
-    fetch(`${endpoint}/api/createTag`, {
+    fetch(`${endpoint}/Tags.json`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -44,8 +44,8 @@ const getAllTags = () => new Promise((resolve, reject) => {
   });
   
   // Delete Tag
-  const deleteTag = (id) => new Promise((resolve, reject) => {
-      fetch(`${endpoint}/api/deleteTag/${id}`, {
+  const deleteTag = (firebaseKey) => new Promise((resolve, reject) => {
+      fetch(`${endpoint}/Tags/${firebaseKey}.json`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
